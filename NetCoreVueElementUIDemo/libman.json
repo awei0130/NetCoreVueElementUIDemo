@@ -1,0 +1,28 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+
+    {
+      "provider": "cdnjs",
+      "library": "element-ui@2.8.2",
+      "destination": "wwwroot/lib/element-ui/",
+      "files": [
+        "index.js",
+        "theme-chalk/index.css",
+        "theme-chalk/fonts/element-icons.ttf",
+        "theme-chalk/fonts/element-icons.woff"
+      ]
+    }
+  ,
+{
+  "provider": "cdnjs",
+  "library": "vue@2.5.16",
+  "destination": "wwwroot/lib/vue/",
+  "files": [
+    "vue.min.js",
+    "vue.js"
+  ]
+}
+]
+}

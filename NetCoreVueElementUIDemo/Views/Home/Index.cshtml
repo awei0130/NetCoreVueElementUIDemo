@@ -1,0 +1,130 @@
+﻿@using System.Linq
+@using NetCoreVueElementUIDemo.Models
+@model List<Menu>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Index</title>
+    <link rel="stylesheet" href="~/css/main.css" />
+    <link rel="stylesheet" href="~/lib/element-ui/theme-chalk/index.css" />
+    <script type="text/javascript" src="~/lib/vue/vue.js"></script>
+    <script type="text/javascript" src="~/lib/element-ui/index.js"></script>
+</head>
+<body>
+    <div id="app">
+            <el-container>
+                <el-header>
+                    <div style=" width: 230px; height: 50px; text-align: center; 
+                                    line-height: 60px; color: #fff; font-size: 20px;">
+                        <span class="big">@ViewData["system_name"]</span>
+                    </div>
+                    <div style="margin-top: -31px;  margin-left: 250px; width:100px; text-align:left;">
+                        <span @@click="menuToggle">
+                            <i class="el-icon-menu"></i>
+                        </span>
+                    </div>
+                    <div style="margin-top: -24px;  margin-left: 330px; text-align:right;">
+                        当前用户：{{username}}
+                    </div>
+                </el-header>
+                <el-container>
+                    <el-aside width="230px">
+                        <el-menu default-active="2"
+                                 class="el-menu-vertical-demo"
+                                 @@open="handleOpen"
+                                 @@close="handleClose"
+                                 background-color="#222d32"
+                                 text-color="#fff"
+                                 active-text-color="#ffd04b"
+                                 style="height:100%;"
+                                 :collapse="isCollapse">
+                            @foreach (var item in Model)
+                            {
+                                @if (item.path.Contains("/") && item.parentId == "0")
+                                {
+                                    <el-menu-item index="@item.name" >
+                                        <i class="@item.icon"></i>
+                                        <span slot="title">@item.title</span>
+                                    </el-menu-item>
+                                }
+                                else if (item.parentId == "0")
+                                {
+                                    <el-submenu index="@item.name">
+                                        <template slot="title">
+                                            <i class="@item.icon"></i>
+                                            <span slot="title">@item.title</span>
+                                        </template>
+                                        @{ 
+                                                var childMenu = Model.Where<Menu>(m => m.parentId == item.id);
+                                         }
+                                            @foreach (var item2 in childMenu)
+                                            {
+                                                if (item2.path.Contains("/"))
+                                                {
+                                                    <el-menu-item index="@item2.name">
+                                                        <i class="@item2.icon"></i>
+                                                        <span slot="title">@item2.title</span>
+                                                    </el-menu-item>
+                                                }
+                                                else
+                                                {
+                                                    <el-submenu index="@item2.name">
+                                                        <template slot="title">
+                                                            <i class="@item2.icon"></i>
+                                                            <span slot="title">@item2.title</span>
+                                                        </template>
+                                                        @{
+                                                            var childMenu2 = Model.Where<Menu>(m => m.parentId == item2.id);
+                                                        }
+                                                        @foreach (var item3 in childMenu2)
+                                                        {
+                                                            <el-menu-item index="@item3.name" >
+                                                                <i class="@item3.icon"></i>
+                                                                <span slot="title">@item3.title</span>
+                                                            </el-menu-item>
+                                                        }
+                                                    </el-submenu>
+                                                }
+                                            }
+                                    </el-submenu>
+                                }
+                            }
+                        </el-menu>
+                    </el-aside>
+                    <el-main v-bind:class="{main_toggle:isCollapse}">Main</el-main>
+                </el-container>
+            </el-container>
+    </div>
+</body>
+</html>
+<script>
+    var app = new Vue({
+        el: "#app",
+        data: {
+            isCollapse:false,
+            username:'@Html.Raw(ViewData["username"])'
+        },
+        methods: {
+            handleOpen(key, keyPath) {
+                console.log(key, keyPath);
+            },
+            handleClose(key, keyPath) {
+                console.log(key, keyPath);
+            },
+            menuToggle() {
+                if (this.isCollapse) {
+
+                    this.isCollapse = false;
+                } else {
+
+                    this.isCollapse = true;
+                }
+            }
+        }
+    });
+</script>
